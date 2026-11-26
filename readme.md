@@ -1,14 +1,33 @@
-# Mini-GPT (Shakespeare)
+# Mini-GPT: Building Shakespeare from Scratch 🎭
 
-A minimal, from-scratch implementation of a GPT (Generative Pre-trained Transformer) language model, trained on the Tiny Shakespeare dataset. This repository is designed to be an educational tool to understand the core mechanics of LLMs, including Causal Self-Attention, Multi-Layer Perceptrons, and autoregressive text generation.
+![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
+![PyTorch](https://img.shields.io/badge/PyTorch-2.0%2B-orange)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-## Features
-- **From Scratch**: No Hugging Face `transformers` library. Pure PyTorch.
-- **Hardware Agnostic**: Runs on Apple Silicon (MPS), NVIDIA GPUs (CUDA), and CPU.
-- **Regularization**: Includes Dropout and Cosine Annealing Learning Rate scheduling to prevent overfitting.
+Ever wondered what actually happens under the hood of ChatGPT? I did. So I decided to build a tiny version of a GPT (Generative Pre-trained Transformer) from absolute scratch using only raw PyTorch. 
 
-## Quick Start
+No Hugging Face wrappers, no magic black boxes—just pure, readable code. I trained it on the Tiny Shakespeare dataset, and it learned to write its own (very dramatic) Elizabethan plays.
 
-### 1. Install Dependencies
-```bash
-pip install torch numpy tqdm
+## 🧠 How it works (The Flow)
+
+Here’s a quick visual of how the data moves through the project:
+
+```mermaid
+graph TD
+    A[input.txt] -->|prepare_data.py| B(train.bin / val.bin)
+    B -->|train.py| C(get_batch)
+    
+    subgraph Model.py (The Brain)
+        C --> D[Token & Position Embeddings]
+        D --> E[Transformer Block 1]
+        E --> F[...]
+        F --> G[Transformer Block N]
+        G --> H[LayerNorm]
+        H --> I[Linear LM Head]
+    end
+    
+    I --> J[Logits]
+    J -->|Cross Entropy Loss| K[Backpropagation]
+    K -->|AdamW + Cosine Decay| E
+    
+    I -->|sample.py| L[Generated Shakespeare Text]
